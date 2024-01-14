@@ -46,7 +46,7 @@ def parse_args():
     parser.add_argument("--search_intervals", nargs='+', type=float, default=(0.01,1.2,100) ,help="In the format of (gamma_1, gamma_2, search_interval)")
     
     parser.add_argument("--only_eval", action="store_true", default=False, help='use only when you have the PTQ param and only want to evaluate')
-    parser.add_argument("--ptq_param_path", type=str, default="./q_params/FP4_FPQ.pt")
+    parser.add_argument("--ptq_param_path", type=str)
 
     return parser.parse_args()
 
@@ -122,7 +122,8 @@ def main():
             calib_size = args.calib_size,
             quant_config = args.quant_config,
             search_round=args.search_round,
-            search_intervals=tuple(args.search_intervals)
+            search_intervals=tuple(args.search_intervals),
+            ptq_param_path= args.ptq_param_path
         )
 
     dumped = json.dumps(results, indent=2)

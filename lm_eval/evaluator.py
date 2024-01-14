@@ -32,6 +32,7 @@ def calibrate_evaluate(
     quant_config = 'FPQ_config_llama',
     search_round = 3,
     search_intervals = (0.01,1.2,100),
+    ptq_param_path = None, # save qmodel
 ):
     """Instantiate and evaluate a model on a list of tasks.
 
@@ -139,18 +140,23 @@ def calibrate_evaluate(
         quant_cfg = cfg_modifier(quant_cfg)
        
         wrapped_modules=net_wrap.wrap_modules_in_net(lm.model, quant_cfg)
-        print(lm.model)
+        print("lm.model:", lm.model)
 
         ## test saving here
-        quant_calibrator = FloatingPointQuantCalibrator(lm.model,wrapped_modules,calib_dataloader,sequential=False,batch_size=1)
+        print("Start Calibration")
+        quant_calibrator = FloatingPointQuantCalibrator(lm.model,wrapped_modules,calib_dataloader,sequential=False,batch_size=16) # ch bs from 1 to 16
         quant_calibrator.batching_quant_calib()
         try:
             quant_calibrator.save_qparams(config_name, save_name = f"W{bit_settings[0][0]}A{bit_settings[0][1]}E{bit_settings[0][2]}_search_round{search_round}_search_intervals({search_intervals_[0][0]},{search_intervals_[0][1]},{search_intervals_[0][2]})" )
         except:
             quant_calibrator.save_qparams(config_name, save_name = "test" )
 
-
         print(f"Finish Calibration")
+
+        # save qmodel
+        if ptq_param_path:
+            torch.save(lm.model.state_dict(), ptq_param_path)
+            print(f"qmodel saved at {ptq_param_path}")
 
     results = evaluate(
         lm=lm,
