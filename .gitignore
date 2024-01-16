@@ -9,3 +9,6 @@ __pycache__ copy/
 wandb/
 docs/
 search_result/
+logs/
+tags
+.vscode/
