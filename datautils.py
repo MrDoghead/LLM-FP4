@@ -106,8 +106,8 @@ def get_c4(nsamples, seed, seqlen, model):
         'allenai/c4', data_files={'validation': 'en/c4-validation.00000-of-00008.json.gz'}, split='validation'
     )
     """
-    traindata = load_dataset("json", data_files="/data/c4/en/c4-train.00000-of-01024.json.gz", split='train', verification_mode=VerificationMode.NO_CHECKS)
-    valdata = load_dataset("json", data_files="/data/c4/en/c4-validation.00000-of-00008.json.gz", split='train', verification_mode=VerificationMode.NO_CHECKS)
+    traindata = load_dataset("json", data_files="/data/datasets/c4/en/c4-train.00000-of-01024.json.gz", split='train', verification_mode=VerificationMode.NO_CHECKS)
+    valdata = load_dataset("json", data_files="/data/datasets/c4/en/c4-validation.00000-of-00008.json.gz", split='train', verification_mode=VerificationMode.NO_CHECKS)
     print("c4 data loaded")
 
     from transformers import AutoTokenizer
